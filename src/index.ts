@@ -1,18 +1,24 @@
 import erorrs from "./errors.json";
 
-const readError = (message: string) => {
-  const data = Object.entries(erorrs).map(([key, value]) => {
-    return { key, value };
-  });
+// Useless keyword
+const REGEX =
+  /(failed to execute message; message index: \d:|dispatch:|reply:|: execute wasm contract failed|Generic error:)/g;
 
-  for (const error of data) {
-    const { key, value } = error;
-    if (message.includes(key)) {
-      // uppercase first letter
-      return value.charAt(0).toUpperCase() + value.slice(1);
+const readError = (message: string) => {
+  try {
+    const str = message.replace(REGEX, "").trim();
+    for (const [key, value] of Object.entries(erorrs)) {
+      if (str.includes(key)) {
+        return uppercaseFirstLetter(value);
+      }
     }
+    return uppercaseFirstLetter(str);
+  } catch {
+    return undefined;
   }
-  return undefined;
 };
 
 export default readError;
+
+const uppercaseFirstLetter = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1);
