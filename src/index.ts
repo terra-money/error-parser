@@ -2,9 +2,11 @@
 const REGEX =
   /(failed to execute message; message index: \d:|dispatch:|reply:|: execute wasm contract failed|Generic error:)/g;
 
-const parse = (message: string) => {
-  const str = message.replace(REGEX, "").trim();
-  return str;
+export const parse = (message: string) => {
+  try {
+    const str = message.replace(REGEX, "").trim();
+    return str;
+  } catch {
+    return "";
+  }
 };
-
-export default parse;
